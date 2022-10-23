@@ -190,7 +190,7 @@ static rt_err_t mlx90392_get_stat1(struct mlx90392_device *dev, union mlx90392_s
 {
     rt_err_t res = RT_EOK;
 
-    res = mlx90392_mem_read(dev, 0x0, (rt_uint8_t *)stat1, 1);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_STAT1, (rt_uint8_t *)stat1, 1);
     if (res != RT_EOK)
     {
         rt_kprintf("error\r\n");
@@ -207,7 +207,7 @@ static rt_err_t mlx90392_get_stat2(struct mlx90392_device *dev, union mlx90392_s
 {
     rt_err_t res = RT_EOK;
 
-    res = mlx90392_mem_read(dev, 0x7, (rt_uint8_t *)stat2, 1);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_STAT2, (rt_uint8_t *)stat2, 1);
     if (res != RT_EOK)
     {
         rt_kprintf("error\r\n");
@@ -235,12 +235,27 @@ static rt_bool_t mlx90392_is_data_ready(struct mlx90392_device *dev)
     }
 }
 
+static rt_bool_t mlx90392_is_data_overrun(struct mlx90392_device *dev)
+{
+    union mlx90392_stat2 stat2;
+
+    mlx90392_get_stat2(dev, &stat2);
+    if (stat2.dor)
+    {
+        return RT_TRUE;
+    }
+    else
+    {
+        return RT_FALSE;
+    }
+}
+
 rt_err_t mlx90392_get_x(struct mlx90392_device *dev, rt_int16_t *x)
 {
     rt_err_t res = RT_EOK;
     rt_uint8_t recv_buf[2];
 
-    res = mlx90392_mem_read(dev, 0x1, recv_buf, 2);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_X, recv_buf, 2);
     if (res == RT_EOK)
     {
         *x = recv_buf[1]<<8 | recv_buf[0];
@@ -254,7 +269,7 @@ rt_err_t mlx90392_get_y(struct mlx90392_device *dev, rt_int16_t *y)
     rt_err_t res = RT_EOK;
     rt_uint8_t recv_buf[2];
 
-    res = mlx90392_mem_read(dev, 0x3, recv_buf, 2);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_Y, recv_buf, 2);
     if (res == RT_EOK)
     {
         *y = recv_buf[1]<<8 | recv_buf[0];
@@ -268,7 +283,7 @@ rt_err_t mlx90392_get_z(struct mlx90392_device *dev, rt_int16_t *z)
     rt_err_t res = RT_EOK;
     rt_uint8_t recv_buf[2];
 
-    res = mlx90392_mem_read(dev, 0x5, recv_buf, 2);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_Z, recv_buf, 2);
     if (res == RT_EOK)
     {
         *z = recv_buf[1]<<8 | recv_buf[0];
@@ -287,10 +302,10 @@ rt_err_t mlx90392_get_x_flux(struct mlx90392_device *dev, float *x)
         rt_thread_delay(100);
     }
 
-    res = mlx90392_mem_read(dev, 0x1, recv_buf, 2);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_X, recv_buf, 2);
     if (res == RT_EOK)
     {
-        *x = (float)(((rt_int16_t)recv_buf[1] << 8) | recv_buf[0])*MAGNETO10_MAG_FLUX_RESOLUTION;
+        *x = (float)(((rt_int16_t)recv_buf[1] << 8) | recv_buf[0])*MAGNETIC_SENSITIVITY_XY;
     }
 
     return res;
@@ -306,10 +321,10 @@ rt_err_t mlx90392_get_y_flux(struct mlx90392_device *dev, float *y)
         rt_thread_delay(100);
     }
 
-    res = mlx90392_mem_read(dev, 0x3, recv_buf, 2);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_Y, recv_buf, 2);
     if (res == RT_EOK)
     {
-        *y = (float)(((rt_int16_t)recv_buf[1] << 8) | recv_buf[0])*MAGNETO10_MAG_FLUX_RESOLUTION;
+        *y = (float)(((rt_int16_t)recv_buf[1] << 8) | recv_buf[0])*MAGNETIC_SENSITIVITY_XY;
     }
 
     return res;
@@ -325,10 +340,10 @@ rt_err_t mlx90392_get_z_flux(struct mlx90392_device *dev, float *z)
         rt_thread_delay(100);
     }
 
-    res = mlx90392_mem_read(dev, 0x5, recv_buf, 2);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_Z, recv_buf, 2);
     if (res == RT_EOK)
     {
-        *z = (float)(((rt_int16_t)recv_buf[1] << 8) | recv_buf[0])*MAGNETO10_MAG_FLUX_RESOLUTION;
+        *z = (float)(((rt_int16_t)recv_buf[1] << 8) | recv_buf[0])*MAGNETIC_SENSITIVITY_Z;
     }
 
     return res;
@@ -339,7 +354,7 @@ rt_err_t mlx90392_get_t(struct mlx90392_device *dev, rt_int16_t *t)
     rt_err_t res = RT_EOK;
     rt_uint8_t recv_buf[2];
 
-    res = mlx90392_mem_read(dev, 0x8, recv_buf, 2);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_T, recv_buf, 2);
     if (res == RT_EOK)
     {
         *t = recv_buf[1]<<8 | recv_buf[0];
@@ -358,10 +373,10 @@ rt_err_t mlx90392_get_temperature(struct mlx90392_device *dev, float *t)
         rt_thread_delay(100);
     }
 
-    res = mlx90392_mem_read(dev, 0x8, recv_buf, 2);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_T, recv_buf, 2);
     if (res == RT_EOK)
     {
-        *t = (float)(((rt_int16_t)recv_buf[1] << 8 ) | recv_buf[0] ) / MAGNETO10_TEMPERATURE_RES;
+        *t = (float)(((rt_int16_t)recv_buf[1] << 8 ) | recv_buf[0] ) / TEMPERATURE_RES;
     }
 
     return res;
@@ -371,7 +386,7 @@ rt_err_t mlx90392_get_cid(struct mlx90392_device *dev, rt_uint8_t *cid)
 {
     rt_err_t res = RT_EOK;
 
-    res = mlx90392_mem_read(dev, 0xA, cid, 1);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_CID, cid, 1);
     if (res != RT_EOK)
     {
         rt_kprintf("Read CID is error\r\n");
@@ -384,7 +399,7 @@ rt_err_t mlx90392_get_did(struct mlx90392_device *dev, rt_uint8_t *did)
 {
     rt_err_t res = RT_EOK;
 
-    res = mlx90392_mem_read(dev, 0xB, did, 1);
+    res = mlx90392_mem_read(dev, MEM_ADDRESS_DID, did, 1);
     if (res != RT_EOK)
     {
         rt_kprintf("Read DID is error\r\n");
@@ -552,6 +567,11 @@ rt_err_t mlx90392_get_xyz(struct mlx90392_device *dev, struct mlx90392_xyz *xyz)
     rt_err_t res = RT_EOK;
     rt_uint8_t recv_buf[6];
 
+    while (mlx90392_is_data_ready(dev) == RT_FALSE)
+    {
+        rt_thread_delay(100);
+    }
+
     res = mlx90392_mem_read(dev, 0x1, recv_buf, 6);
     if (res == RT_EOK)
     {
@@ -559,6 +579,9 @@ rt_err_t mlx90392_get_xyz(struct mlx90392_device *dev, struct mlx90392_xyz *xyz)
         xyz->y = recv_buf[3]<<8 | recv_buf[2];
         xyz->z = recv_buf[5]<<8 | recv_buf[4];
     }
+
+    if (mlx90392_is_data_overrun(dev))
+        res = RT_ERROR;
 
     return res;
 }
@@ -576,10 +599,13 @@ rt_err_t mlx90392_get_xyz_flux(struct mlx90392_device *dev, struct mlx90392_xyz_
     res = mlx90392_mem_read(dev, 0x1, recv_buf, 6);
     if (res == RT_EOK)
     {
-        xyz->x = (float)(((rt_int16_t)recv_buf[1] << 8) | recv_buf[0]) * MAGNETO10_MAG_FLUX_RESOLUTION;
-        xyz->y = (float)(((rt_int16_t)recv_buf[3] << 8) | recv_buf[2]) * MAGNETO10_MAG_FLUX_RESOLUTION;
-        xyz->z = (float)(((rt_int16_t)recv_buf[5] << 8) | recv_buf[4]) * MAGNETO10_MAG_FLUX_RESOLUTION;
+        xyz->x = (float)(((rt_int16_t)recv_buf[1] << 8) | recv_buf[0]) * MAGNETIC_SENSITIVITY_XY;
+        xyz->y = (float)(((rt_int16_t)recv_buf[3] << 8) | recv_buf[2]) * MAGNETIC_SENSITIVITY_XY;
+        xyz->z = (float)(((rt_int16_t)recv_buf[5] << 8) | recv_buf[4]) * MAGNETIC_SENSITIVITY_Z;
     }
+
+    if (mlx90392_is_data_overrun(dev))
+        res = RT_ERROR;
 
     return res;
 }
@@ -947,7 +973,7 @@ struct mlx90392_device *mlx90392_init(const char *dev_name, rt_uint8_t param)
             rt_uint8_t id[2];
 
             /* find mlx90392 device at address: 0x0C */
-            dev->i2c_addr = MLX90392_I2C_ADDRESS;
+            dev->i2c_addr = MLX9039x_I2C_ADDRESS;
             if (mlx90392_mem_read(dev, 0x0A, id, 2) != RT_EOK)
             {
                 rt_kprintf("Can't find device at '%s'!", dev_name);

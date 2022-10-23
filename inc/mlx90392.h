@@ -19,43 +19,37 @@
 
 #define MLX90397RLQ_AAA_000 3
 
-#define MLX90392    MLX90392ELQ_AAA_011
+#define MLX9039x    MLX90397RLQ_AAA_000
+//#define MLX9039x    MLX90392ELQ_AAA_013
 
-#if MLX90392 == MLX90392ELQ_AAA_010
-#define MLX90392_I2C_ADDRESS                    (0x0C)        // address pin A0,A1 low (GND), default for MLX90392
-
-/**
- * @brief Magneto 10 magnetic flux resolution.
- * @details Specified resolution for magnetic flux of Magneto 10 Click driver.
- */
-#define MAGNETO10_MAG_FLUX_RESOLUTION   0.15    //uT/LSB
-#elif MLX90392 == MLX90392ELQ_AAA_011
-#define MLX90392_I2C_ADDRESS                    (0x0C)        // address pin A0,A1 low (GND), default for MLX90392
-
-/**
- * @brief Magneto 10 magnetic flux resolution.
- * @details Specified resolution for magnetic flux of Magneto 10 Click driver.
- */
-#define MAGNETO10_MAG_FLUX_RESOLUTION   1.5     //uT/LSB
-#elif MLX90392 == MLX90392ELQ_AAA_013
-#define MLX90392_I2C_ADDRESS                    (0x3C)        // address pin A0,A1 low (GND), default for MLX90392
-
-/**
- * @brief Magneto 10 magnetic flux resolution.
- * @details Specified resolution for magnetic flux of Magneto 10 Click driver.
- */
-#define MAGNETO10_MAG_FLUX_RESOLUTION   1.5     //uT/LSB
-#elif MLX90392 == MLX90397RLQ_AAA_000
-#define MLX90392_I2C_ADDRESS                    (0x0D)        // address pin A0,A1 low (GND), default for MLX90397
-
-/**
- * @brief Magneto 10 magnetic flux resolution.
- * @details Specified resolution for magnetic flux of Magneto 10 Click driver.
- */
-#define MAGNETO10_MAG_FLUX_RESOLUTION   1.5     //uT/LSB
+#if MLX9039x == MLX90392ELQ_AAA_010
+#define MLX9039x_I2C_ADDRESS                    (0x0C)        // address pin A0,A1 low (GND), default for MLX90392
+#define MAGNETIC_SENSITIVITY_XY   0.15    //uT/LSB magnetic flux resolution
+#define MAGNETIC_SENSITIVITY_Z    0.15    //uT/LSB
+#elif MLX9039x == MLX90392ELQ_AAA_011
+#define MLX9039x_I2C_ADDRESS                    (0x0C)        // address pin A0,A1 low (GND), default for MLX90392
+#define MAGNETIC_SENSITIVITY_XY   1.5    //uT/LSB magnetic flux resolution
+#define MAGNETIC_SENSITIVITY_Z    1.5    //uT/LSB
+#elif MLX9039x == MLX90392ELQ_AAA_013
+#define MLX9039x_I2C_ADDRESS                    (0x3C)        // address pin A0,A1 low (GND), default for MLX90392
+#define MAGNETIC_SENSITIVITY_XY   1.5    //uT/LSB magnetic flux resolution
+#define MAGNETIC_SENSITIVITY_Z    1.5    //uT/LSB
+#elif MLX9039x == MLX90397RLQ_AAA_000
+#define MLX9039x_I2C_ADDRESS                    (0x0D)        //default for MLX90397
+#define MAGNETIC_SENSITIVITY_XY   1.5    //uT/LSB magnetic flux resolution
+#define MAGNETIC_SENSITIVITY_Z    1.5    //uT/LSB
 #endif
 
-#define MAGNETO10_TEMPERATURE_RES       50.0
+#define TEMPERATURE_RES           50.0
+
+#define MEM_ADDRESS_STAT1   0x0
+#define MEM_ADDRESS_X       0x1
+#define MEM_ADDRESS_Y       0x3
+#define MEM_ADDRESS_Z       0x5
+#define MEM_ADDRESS_STAT2   0x7
+#define MEM_ADDRESS_T       0x8
+#define MEM_ADDRESS_CID     0xA
+#define MEM_ADDRESS_DID     0xB
 
 union mlx90392_stat1
 {

@@ -116,7 +116,7 @@ static rt_err_t _mlx90392_reset(rt_sensor_t sensor)
     mlx90392_reset((struct mlx90392_device *)sensor->parent.user_data);
 }
 
-static rt_size_t _mlx90392_polling_get_data(rt_sensor_t sensor, struct rt_sensor_data *data)
+static RT_SIZE_TYPE _mlx90392_polling_get_data(rt_sensor_t sensor, struct rt_sensor_data *data)
 {
 //    if (sensor->info.type == RT_SENSOR_CLASS_MPS)
 //    {
@@ -136,7 +136,7 @@ static rt_size_t _mlx90392_polling_get_data(rt_sensor_t sensor, struct rt_sensor
     return 1;
 }
 
-static rt_size_t mlx90392_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
+static RT_SIZE_TYPE mlx90392_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
 {
     RT_ASSERT(buf);
 

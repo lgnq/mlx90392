@@ -350,9 +350,9 @@ rt_err_t mlx90392_set_param(struct mlx90392_device *dev, enum mlx90392_cmd cmd, 
 /* mlx90392 3axes structure */
 struct mlx90392_3axes
 {
-    float x; // x 轴数据
-    float y; // y 轴数据
-    float z; // z 轴数据
+    float x; // x 
+    float y; // y 
+    float z; // z 
 };
 
 /**

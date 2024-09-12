@@ -36,7 +36,5 @@
 #define MLX90392_CTRL_RESET                     0x11
 
 int rt_hw_mlx90392_init(const char *name, struct rt_sensor_config *cfg);
-
 #endif
-
 #endif

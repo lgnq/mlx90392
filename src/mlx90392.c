@@ -761,7 +761,7 @@ static rt_err_t mlx90392_continuous_measurement(struct mlx90392_device *dev, str
     return status;
 }
 
-static rt_err_t mlx90392_single_measurement(struct mlx90392_device *dev, struct mlx90392_xyz_flux *xyz)
+rt_err_t mlx90392_single_measurement(struct mlx90392_device *dev, struct mlx90392_xyz_flux *xyz)
 {
     rt_uint8_t status = RT_EOK;
     union mlx90392_stat1 stat1;

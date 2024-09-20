@@ -445,7 +445,6 @@ rt_err_t mlx90392_set_temperature(struct mlx90392_device *dev, rt_uint8_t onoff)
     return res;
 }
 
-
 rt_err_t mlx90392_get_xyz(struct mlx90392_device *dev, struct mlx90392_xyz *xyz)
 {
     rt_err_t res = RT_EOK;
@@ -494,8 +493,6 @@ rt_err_t mlx90392_get_xyz_flux(struct mlx90392_device *dev, struct mlx90392_xyz_
     return res;
 }
 
-
-
 rt_err_t mlx90392_set_hallconf(struct mlx90392_device *dev, rt_uint8_t hallconf)
 {
     rt_err_t res = 0;
@@ -515,7 +512,6 @@ rt_err_t mlx90392_set_hallconf(struct mlx90392_device *dev, rt_uint8_t hallconf)
         
     return res;
 }
-
 
 rt_err_t mlx90392_set_oversampling(struct mlx90392_device *dev, mlx90392_oversampling_t osr)
 {

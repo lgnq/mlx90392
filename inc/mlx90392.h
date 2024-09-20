@@ -157,13 +157,13 @@ enum cmd
     CMD_RESET             = 0xf0
 };
 
-enum axis_flag
+typedef enum
 {
     Z_FLAG = 0x8,
     Y_FLAG = 0x4,
     X_FLAG = 0x2,
     T_FLAG = 0x1
-};
+} axis_flag_t;
 
 /* Accelerometer full scale range */
 enum mlx90392_accel_range

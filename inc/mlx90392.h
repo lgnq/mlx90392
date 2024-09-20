@@ -19,7 +19,7 @@
 
 #define MLX90397RLQ_AAA_000 3
 
-#define MLX9039x    MLX90392ELQ_AAA_013
+#define MLX9039x    MLX90392ELQ_AAA_010
 
 #if MLX9039x == MLX90392ELQ_AAA_010
 #define MLX9039x_I2C_ADDRESS                    (0x0C)        // address pin A0,A1 low (GND), default for MLX90392

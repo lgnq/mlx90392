@@ -17,8 +17,6 @@
 #define MLX90392ELQ_AAA_011 1
 #define MLX90392ELQ_AAA_013 2
 
-#define MLX90397RLQ_AAA_000 3
-
 #define MLX9039x    MLX90392ELQ_AAA_010
 
 #if MLX9039x == MLX90392ELQ_AAA_010
@@ -31,10 +29,6 @@
 #define MAGNETIC_SENSITIVITY_Z    1.5    //uT/LSB
 #elif MLX9039x == MLX90392ELQ_AAA_013
 #define MLX9039x_I2C_ADDRESS                    (0x3C)        // address pin A0,A1 low (GND), default for MLX90392
-#define MAGNETIC_SENSITIVITY_XY   1.5    //uT/LSB magnetic flux resolution
-#define MAGNETIC_SENSITIVITY_Z    1.5    //uT/LSB
-#elif MLX9039x == MLX90397RLQ_AAA_000
-#define MLX9039x_I2C_ADDRESS                    (0x0D)        //default for MLX90397
 #define MAGNETIC_SENSITIVITY_XY   1.5    //uT/LSB magnetic flux resolution
 #define MAGNETIC_SENSITIVITY_Z    1.5    //uT/LSB
 #endif

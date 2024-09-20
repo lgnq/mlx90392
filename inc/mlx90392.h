@@ -322,18 +322,6 @@ struct mlx90392_device *mlx90392_init(const char *dev_name, rt_uint8_t param);
  */
 void mlx90392_deinit(struct mlx90392_device *dev);
 
-/**
- * This function set mlx90392 parameters.
- *
- * @param dev the pointer of device driver structure
- * @param cmd Configuration item
- * @param param Configuration item parameter
- *
- * @return the setting status, RT_EOK reprensents  setting the parameter successfully.
- */
-rt_err_t mlx90392_set_param(struct mlx90392_device *dev, enum mlx90392_cmd cmd, rt_uint16_t param);
-
-
 rt_err_t mlx90392_nop(struct mlx90392_device *dev);
 rt_err_t mlx90392_exit(struct mlx90392_device *dev);
 rt_err_t mlx90392_reset(struct mlx90392_device *dev);

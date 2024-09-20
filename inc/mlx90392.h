@@ -148,7 +148,6 @@ union mlx90392_cust_ctrl
     };
 };
 
-
 enum cmd
 {
     CMD_NOP               = 0x00,

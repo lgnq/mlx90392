@@ -8,9 +8,9 @@
  * 2022-02-14     lgnq         the first version
  */
 
-#include "sensor_melexis_mlx90392.h"
+#include "melexis_mlx90392_sensor_v1.h"
 
-#define DBG_TAG "sensor.melexis.mlx90392"
+#define DBG_TAG "melexis.mlx90392.sensor.v1"
 #define DBG_LVL DBG_INFO
 #include <rtdbg.h>
 
@@ -25,40 +25,7 @@ static struct mlx90392_device *_mlx90392_init(struct rt_sensor_intf *intf)
 
 static rt_err_t _mlx90392_set_range(rt_sensor_t sensor, rt_int32_t range)
 {
-//    if (sensor->info.type == RT_SENSOR_CLASS_ACCE)
-//    {
-//        rt_uint8_t range_ctr;
-//
-//        if (range < 2000)
-//            range_ctr = MPU6XXX_ACCEL_RANGE_2G;
-//        else if (range < 4000)
-//            range_ctr = MPU6XXX_ACCEL_RANGE_4G;
-//        else if (range < 8000)
-//            range_ctr = MPU6XXX_ACCEL_RANGE_8G;
-//        else
-//            range_ctr = MPU6XXX_ACCEL_RANGE_16G;
-//
-//        LOG_D("acce set range %d", range_ctr);
-//
-//        return mlx90392_set_param(mpu_dev, MPU6XXX_ACCEL_RANGE, range_ctr);
-//    }
-//    else if (sensor->info.type == RT_SENSOR_CLASS_GYRO)
-//    {
-//        rt_uint8_t range_ctr;
-//
-//        if (range < 250000UL)
-//            range_ctr = MPU6XXX_GYRO_RANGE_250DPS;
-//        else if (range < 500000UL)
-//            range_ctr = MPU6XXX_GYRO_RANGE_500DPS;
-//        else if (range < 1000000UL)
-//            range_ctr = MPU6XXX_GYRO_RANGE_1000DPS;
-//        else
-//            range_ctr = MPU6XXX_GYRO_RANGE_2000DPS;
-//
-//        LOG_D("gyro set range %d", range);
-//
-//        return mlx90392_set_param(mpu_dev, MPU6XXX_GYRO_RANGE, range_ctr);
-//    }
+    LOG_D("Setting range is not supported!");
     return RT_EOK;
 }
 
@@ -78,32 +45,9 @@ static rt_err_t _mlx90392_acc_set_mode(rt_sensor_t sensor, rt_uint8_t mode)
 
 static rt_err_t _mlx90392_set_power(rt_sensor_t sensor, rt_uint8_t power)
 {
-    static rt_uint8_t ref_count = 0;
+    LOG_D("Setting power is not supported!");
+    return RT_EOK;
 
-    if (power == RT_SENSOR_POWER_DOWN)
-    {
-        if (ref_count > 0)
-        {
-            ref_count --;
-        }
-        if (ref_count == 0)
-        {
-            LOG_D("set power down");
-            return mlx90392_set_param(mlx_dev, MPU6XXX_SLEEP, MPU6XXX_SLEEP_ENABLE);
-        }
-        return RT_EOK;
-    }
-    else if (power == RT_SENSOR_POWER_NORMAL)
-    {
-        ref_count ++;
-        LOG_D("set power normal");
-        return mlx90392_set_param(mlx_dev, MPU6XXX_SLEEP, MPU6XXX_SLEEP_DISABLE);
-    }
-    else
-    {
-        LOG_W("Unsupported mode, code is %d", power);
-        return -RT_ERROR;
-    }
 }
 
 static rt_err_t _mlx90392_nop(rt_sensor_t sensor)
@@ -116,27 +60,37 @@ static rt_err_t _mlx90392_reset(rt_sensor_t sensor)
     mlx90392_reset((struct mlx90392_device *)sensor->parent.user_data);
 }
 
-static rt_size_t _mlx90392_polling_get_data(rt_sensor_t sensor, struct rt_sensor_data *data)
+static RT_SIZE_TYPE _mlx90392_polling_get_data(rt_sensor_t sensor, struct rt_sensor_data *data)
 {
-//    if (sensor->info.type == RT_SENSOR_CLASS_MPS)
-//    {
-//        struct mlx90392_3axes acce;
-//        if (mlx90392_get_accel(mpu_dev, &acce) != RT_EOK)
-//        {
-//            return 0;
-//        }
-//
-//        data->type = RT_SENSOR_CLASS_ACCE;
-//        data->data.acce.x = acce.x;
-//        data->data.acce.y = acce.y;
-//        data->data.acce.z = acce.z;
-//        data->timestamp = rt_sensor_get_ts();
-//    }
+   if (sensor->info.type == RT_SENSOR_CLASS_MAG)
+   {
+       struct mlx90392_xyz_flux xyz;
+       if (mlx90392_single_measurement(mlx_dev, &xyz) != RT_EOK)
+       {
+           return 0;
+       }
 
+       data->type = RT_SENSOR_CLASS_MAG;
+       data->data.mag.x = xyz.x;
+       data->data.mag.y = xyz.y;
+       data->data.mag.z = xyz.z;
+       data->timestamp = rt_sensor_get_ts();
+   }else
+   if (sensor->info.type == RT_SENSOR_CLASS_TEMP)
+   {
+       float temp;
+       if (mlx90392_get_temperature(mlx_dev, &temp) != RT_EOK)
+       {
+           return 0;
+       }
+       data->type = RT_SENSOR_CLASS_TEMP;
+       data->data.temp=temp;
+       data->timestamp = rt_sensor_get_ts();
+   }
     return 1;
 }
 
-static rt_size_t mlx90392_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
+static RT_SIZE_TYPE mlx90392_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
 {
     RT_ASSERT(buf);
 

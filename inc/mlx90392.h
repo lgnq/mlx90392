@@ -245,50 +245,6 @@ typedef enum mlx90392_oversampling
     MLX90392_OSR_3,
 } mlx90392_oversampling_t;
 
-union mlx90392_status
-{
-    struct
-    {
-    /** D1-D0: indicates the number of bytes (2D[1:0]) to follow the status byte after a read measurement
-     * or a read register command has been sent.
-     */
-    rt_uint8_t d0 : 1;
-    /** D1-D0: indicates the number of bytes (2D[1:0]) to follow the status byte after a read measurement
-     * or a read register command has been sent.
-     */
-    rt_uint8_t d1 : 1;
-
-    /** RS: indicates that the device has been reset successfully by a reset command.
-     */
-    rt_uint8_t rs : 1;
-
-    /** SED: indicates that a single bit error has been corrected by the NVRAM
-     */
-    rt_uint8_t sed : 1;
-
-    /** ERROR: indicates an error.
-     * Can be set when reading out a measurement while the measurement is not yet completed or
-     * when reading out the same measurement twice.
-     */
-    rt_uint8_t error : 1;
-
-    /** SM_mode: if set, the IC is executing a measurement sequence in polling mode.
-     * It can be initiated by a SM command or a pulse on the TRIG input.
-     */
-    rt_uint8_t sm_mode : 1;
-
-    /** WOC_mode: if set, the IC is in wake-up-on-change mode.
-     */
-    rt_uint8_t woc_mode : 1;
-
-    /** Burst_mode: if set, the IC is working in burst mode.
-     */
-    rt_uint8_t burst_mode : 1;
-    };
-
-    rt_uint8_t byte_val;
-};
-
 /* mlx90392 config structure */
 struct mlx90392_config
 {

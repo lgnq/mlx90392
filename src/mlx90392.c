@@ -867,7 +867,7 @@ static void mlx90392(int argc, char **argv)
             struct mlx90392_xyz xyz;
 
             if (argc == 2)
-                mlx90392_continuous_measurement(dev, &xyz, atoi(500));
+                mlx90392_continuous_measurement(dev, &xyz, 500);
             else if (argc == 3)
                 mlx90392_continuous_measurement(dev, &xyz, atoi(argv[2]));
         }
